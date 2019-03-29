@@ -1,0 +1,23 @@
+
+
+
+syntax = "proto3";
+
+
+
+package podcasts;
+
+
+service Podcasts {
+
+    rpc GetPodcasts(Empty) returns (Podcast);
+}
+
+message Empty {
+}
+
+message Podcast {
+    string name = 1;
+    string author = 2;
+    int32 length = 3;
+}

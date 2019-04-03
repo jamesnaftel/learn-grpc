@@ -5,7 +5,7 @@ syntax = "proto3";
 
 
 
-package podcasts;
+package api;
 
 
 service Podcasts {

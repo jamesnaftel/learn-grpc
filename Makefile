@@ -1,3 +1,0 @@
-gen-grpc-code:
-	protoc
-

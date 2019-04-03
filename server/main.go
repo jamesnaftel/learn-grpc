@@ -1,27 +1,23 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"net"
 
-	"github.com/gogo/protobuf/proto"
-	api "github.com/jamesnaftel/learn-grpc/api"
 	log "github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
 )
 
 func main() {
-	mypodcast := &api.Podcast{Name: "SecurityNow", Author: "Steve", Length: (2 << 20)}
+	port := flag.String("port", "3001", "Port to listen on")
 
-	data, err := proto.Marshal(mypodcast)
+	lis, err := net.Listen("tcp", fmt.Sprintf("127.0.0.1:%v", *port))
 	if err != nil {
-		log.Errorf("error marshalling podcast %v", err)
+		log.Fatalf("error creating listen: %v", err)
 	}
 
-	newMyPodcast := &api.Podcast{}
-	err = proto.Unmarshal(data, newMyPodcast)
-	if err != nil {
-		log.Errorf("error unmarshalling podcast %v", err)
-	}
-
-	fmt.Println(newMyPodcast)
+	server := grpc.NewServer()
+	server.Serve(lis)
 
 }

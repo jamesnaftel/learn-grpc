@@ -10,14 +10,27 @@ package api;
 
 service Podcasts {
 
-    rpc GetPodcasts(Empty) returns (Podcast);
-}
-
-message Empty {
+    rpc GetPodcast(PodcastRequest) returns (PodcastResponse);
+    rpc GetPodcasts(Empty) returns(PodcastsResponse);
 }
 
 message Podcast {
     string name = 1;
     string author = 2;
     int32 length = 3;
+}
+
+message PodcastRequest {
+    string name = 1;
+}
+
+message PodcastResponse {
+    Podcast podcast = 1;
+}
+
+message PodcastsResponse {
+    repeated Podcast podcasts = 1;
+}
+
+message Empty {
 }

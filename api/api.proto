@@ -11,7 +11,8 @@ package api;
 service Podcasts {
 
     rpc GetPodcast(PodcastRequest) returns (PodcastResponse);
-    rpc GetPodcasts(Empty) returns(PodcastsResponse);
+    rpc GetPodcasts(Empty) returns (PodcastsResponse);
+    rpc AddPodcast(Podcast) returns (Podcast);
 }
 
 message Podcast {

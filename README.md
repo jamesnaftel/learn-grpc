@@ -11,12 +11,9 @@ go get -u google.golang.org/grpc
 ### Generate podcasts.pb.go w/docker
 docker run --rm -v $(pwd):$(pwd) -w $(pwd) znly/protoc --go_out=plugins=grpc:. -I. podcasts.proto
 
-## Define the service
-Create a .proto file that contains the service information
-```
-service TestService {
-    ...
-}
-```
+## TODO
+* Have the server store data in a db file using proto buf
+* Convert GetPocasts to use a stream
+* Add go modules
 
 

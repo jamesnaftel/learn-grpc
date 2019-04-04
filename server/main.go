@@ -5,9 +5,9 @@ import (
 	"flag"
 	"fmt"
 	"net"
+	"os"
 
 	pb "github.com/jamesnaftel/learn-grpc/api"
-	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
 
@@ -40,13 +40,18 @@ func (s *server) GetPodcasts(ctx context.Context, _ *pb.Empty) (*pb.PodcastsResp
 	return &pb.PodcastsResponse{Podcasts: p}, nil
 }
 
+func (s *server) AddPodcast(context.Context, *pb.Podcast) (*pb.Podcast, error) {
+	return &pb.Podcast{}, nil
+}
+
 func main() {
 	port := flag.String("port", "3001", "Port to listen on")
 	flag.Parse()
 
 	lis, err := net.Listen("tcp", fmt.Sprintf("127.0.0.1:%v", *port))
 	if err != nil {
-		log.Fatalf("error creating listen: %v", err)
+		fmt.Fprintf(os.Stderr, "error creating lis: %v", err)
+		os.Exit(1)
 	}
 
 	gs := grpc.NewServer()

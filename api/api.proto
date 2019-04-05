@@ -11,7 +11,7 @@ package api;
 service Podcasts {
 
     rpc GetPodcast(PodcastRequest) returns (PodcastResponse);
-    rpc GetPodcasts(Empty) returns (PodcastsResponse);
+    rpc GetPodcasts(Empty) returns (stream Podcast);
     rpc AddPodcast(Podcast) returns (Podcast);
 }
 
@@ -27,10 +27,6 @@ message PodcastRequest {
 
 message PodcastResponse {
     Podcast podcast = 1;
-}
-
-message PodcastsResponse {
-    repeated Podcast podcasts = 1;
 }
 
 message Empty {

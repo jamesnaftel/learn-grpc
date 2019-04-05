@@ -28,16 +28,18 @@ func (s *server) GetPodcast(ctx context.Context, name *pb.PodcastRequest) (*pb.P
 	return &pb.PodcastResponse{Podcast: &pb.Podcast{Name: p.Name, Author: p.Author, Length: p.Length}}, nil
 }
 
-func (s *server) GetPodcasts(ctx context.Context, _ *pb.Empty) (*pb.PodcastsResponse, error) {
+func (s *server) GetPodcasts(_ *pb.Empty, stream pb.Podcasts_GetPodcastsServer) error {
 
 	db := initDatabase()
-
-	p := []*pb.Podcast{}
+	
 	for _, val := range db {
-		p = append(p, &pb.Podcast{Name: val.Name, Author: val.Author, Length: val.Length})
+		err := stream.Send(&pb.Podcast{Name: val.Name, Author: val.Author, Length: val.Length})
+		if err != nil {
+			return fmt.Errorf("error sending podcast: %v", err)
+		}
 	}
 
-	return &pb.PodcastsResponse{Podcasts: p}, nil
+	return nil
 }
 
 func (s *server) AddPodcast(context.Context, *pb.Podcast) (*pb.Podcast, error) {

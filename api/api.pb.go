@@ -9,8 +9,7 @@ It is generated from these files:
 
 It has these top-level messages:
 	Podcast
-	PodcastRequest
-	PodcastResponse
+	ByNameRequest
 	Empty
 */
 package api
@@ -67,36 +66,20 @@ func (m *Podcast) GetLength() int32 {
 	return 0
 }
 
-type PodcastRequest struct {
+type ByNameRequest struct {
 	Name string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 }
 
-func (m *PodcastRequest) Reset()                    { *m = PodcastRequest{} }
-func (m *PodcastRequest) String() string            { return proto.CompactTextString(m) }
-func (*PodcastRequest) ProtoMessage()               {}
-func (*PodcastRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
+func (m *ByNameRequest) Reset()                    { *m = ByNameRequest{} }
+func (m *ByNameRequest) String() string            { return proto.CompactTextString(m) }
+func (*ByNameRequest) ProtoMessage()               {}
+func (*ByNameRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
 
-func (m *PodcastRequest) GetName() string {
+func (m *ByNameRequest) GetName() string {
 	if m != nil {
 		return m.Name
 	}
 	return ""
-}
-
-type PodcastResponse struct {
-	Podcast *Podcast `protobuf:"bytes,1,opt,name=podcast" json:"podcast,omitempty"`
-}
-
-func (m *PodcastResponse) Reset()                    { *m = PodcastResponse{} }
-func (m *PodcastResponse) String() string            { return proto.CompactTextString(m) }
-func (*PodcastResponse) ProtoMessage()               {}
-func (*PodcastResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
-
-func (m *PodcastResponse) GetPodcast() *Podcast {
-	if m != nil {
-		return m.Podcast
-	}
-	return nil
 }
 
 type Empty struct {
@@ -105,12 +88,11 @@ type Empty struct {
 func (m *Empty) Reset()                    { *m = Empty{} }
 func (m *Empty) String() string            { return proto.CompactTextString(m) }
 func (*Empty) ProtoMessage()               {}
-func (*Empty) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
+func (*Empty) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
 
 func init() {
 	proto.RegisterType((*Podcast)(nil), "api.Podcast")
-	proto.RegisterType((*PodcastRequest)(nil), "api.PodcastRequest")
-	proto.RegisterType((*PodcastResponse)(nil), "api.PodcastResponse")
+	proto.RegisterType((*ByNameRequest)(nil), "api.ByNameRequest")
 	proto.RegisterType((*Empty)(nil), "api.Empty")
 }
 
@@ -125,9 +107,9 @@ const _ = grpc.SupportPackageIsVersion4
 // Client API for Podcasts service
 
 type PodcastsClient interface {
-	GetPodcast(ctx context.Context, in *PodcastRequest, opts ...grpc.CallOption) (*PodcastResponse, error)
-	GetPodcasts(ctx context.Context, in *Empty, opts ...grpc.CallOption) (Podcasts_GetPodcastsClient, error)
-	AddPodcast(ctx context.Context, in *Podcast, opts ...grpc.CallOption) (*Podcast, error)
+	GetByName(ctx context.Context, in *ByNameRequest, opts ...grpc.CallOption) (*Podcast, error)
+	List(ctx context.Context, in *Empty, opts ...grpc.CallOption) (Podcasts_ListClient, error)
+	Add(ctx context.Context, in *Podcast, opts ...grpc.CallOption) (*Podcast, error)
 }
 
 type podcastsClient struct {
@@ -138,21 +120,21 @@ func NewPodcastsClient(cc *grpc.ClientConn) PodcastsClient {
 	return &podcastsClient{cc}
 }
 
-func (c *podcastsClient) GetPodcast(ctx context.Context, in *PodcastRequest, opts ...grpc.CallOption) (*PodcastResponse, error) {
-	out := new(PodcastResponse)
-	err := grpc.Invoke(ctx, "/api.Podcasts/GetPodcast", in, out, c.cc, opts...)
+func (c *podcastsClient) GetByName(ctx context.Context, in *ByNameRequest, opts ...grpc.CallOption) (*Podcast, error) {
+	out := new(Podcast)
+	err := grpc.Invoke(ctx, "/api.Podcasts/GetByName", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *podcastsClient) GetPodcasts(ctx context.Context, in *Empty, opts ...grpc.CallOption) (Podcasts_GetPodcastsClient, error) {
-	stream, err := grpc.NewClientStream(ctx, &_Podcasts_serviceDesc.Streams[0], c.cc, "/api.Podcasts/GetPodcasts", opts...)
+func (c *podcastsClient) List(ctx context.Context, in *Empty, opts ...grpc.CallOption) (Podcasts_ListClient, error) {
+	stream, err := grpc.NewClientStream(ctx, &_Podcasts_serviceDesc.Streams[0], c.cc, "/api.Podcasts/List", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &podcastsGetPodcastsClient{stream}
+	x := &podcastsListClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -162,16 +144,16 @@ func (c *podcastsClient) GetPodcasts(ctx context.Context, in *Empty, opts ...grp
 	return x, nil
 }
 
-type Podcasts_GetPodcastsClient interface {
+type Podcasts_ListClient interface {
 	Recv() (*Podcast, error)
 	grpc.ClientStream
 }
 
-type podcastsGetPodcastsClient struct {
+type podcastsListClient struct {
 	grpc.ClientStream
 }
 
-func (x *podcastsGetPodcastsClient) Recv() (*Podcast, error) {
+func (x *podcastsListClient) Recv() (*Podcast, error) {
 	m := new(Podcast)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -179,9 +161,9 @@ func (x *podcastsGetPodcastsClient) Recv() (*Podcast, error) {
 	return m, nil
 }
 
-func (c *podcastsClient) AddPodcast(ctx context.Context, in *Podcast, opts ...grpc.CallOption) (*Podcast, error) {
+func (c *podcastsClient) Add(ctx context.Context, in *Podcast, opts ...grpc.CallOption) (*Podcast, error) {
 	out := new(Podcast)
-	err := grpc.Invoke(ctx, "/api.Podcasts/AddPodcast", in, out, c.cc, opts...)
+	err := grpc.Invoke(ctx, "/api.Podcasts/Add", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -191,68 +173,68 @@ func (c *podcastsClient) AddPodcast(ctx context.Context, in *Podcast, opts ...gr
 // Server API for Podcasts service
 
 type PodcastsServer interface {
-	GetPodcast(context.Context, *PodcastRequest) (*PodcastResponse, error)
-	GetPodcasts(*Empty, Podcasts_GetPodcastsServer) error
-	AddPodcast(context.Context, *Podcast) (*Podcast, error)
+	GetByName(context.Context, *ByNameRequest) (*Podcast, error)
+	List(*Empty, Podcasts_ListServer) error
+	Add(context.Context, *Podcast) (*Podcast, error)
 }
 
 func RegisterPodcastsServer(s *grpc.Server, srv PodcastsServer) {
 	s.RegisterService(&_Podcasts_serviceDesc, srv)
 }
 
-func _Podcasts_GetPodcast_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PodcastRequest)
+func _Podcasts_GetByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ByNameRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PodcastsServer).GetPodcast(ctx, in)
+		return srv.(PodcastsServer).GetByName(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.Podcasts/GetPodcast",
+		FullMethod: "/api.Podcasts/GetByName",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PodcastsServer).GetPodcast(ctx, req.(*PodcastRequest))
+		return srv.(PodcastsServer).GetByName(ctx, req.(*ByNameRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Podcasts_GetPodcasts_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _Podcasts_List_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(Empty)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(PodcastsServer).GetPodcasts(m, &podcastsGetPodcastsServer{stream})
+	return srv.(PodcastsServer).List(m, &podcastsListServer{stream})
 }
 
-type Podcasts_GetPodcastsServer interface {
+type Podcasts_ListServer interface {
 	Send(*Podcast) error
 	grpc.ServerStream
 }
 
-type podcastsGetPodcastsServer struct {
+type podcastsListServer struct {
 	grpc.ServerStream
 }
 
-func (x *podcastsGetPodcastsServer) Send(m *Podcast) error {
+func (x *podcastsListServer) Send(m *Podcast) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func _Podcasts_AddPodcast_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Podcasts_Add_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Podcast)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PodcastsServer).AddPodcast(ctx, in)
+		return srv.(PodcastsServer).Add(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.Podcasts/AddPodcast",
+		FullMethod: "/api.Podcasts/Add",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PodcastsServer).AddPodcast(ctx, req.(*Podcast))
+		return srv.(PodcastsServer).Add(ctx, req.(*Podcast))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -262,18 +244,18 @@ var _Podcasts_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*PodcastsServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetPodcast",
-			Handler:    _Podcasts_GetPodcast_Handler,
+			MethodName: "GetByName",
+			Handler:    _Podcasts_GetByName_Handler,
 		},
 		{
-			MethodName: "AddPodcast",
-			Handler:    _Podcasts_AddPodcast_Handler,
+			MethodName: "Add",
+			Handler:    _Podcasts_Add_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "GetPodcasts",
-			Handler:       _Podcasts_GetPodcasts_Handler,
+			StreamName:    "List",
+			Handler:       _Podcasts_List_Handler,
 			ServerStreams: true,
 		},
 	},
@@ -283,19 +265,17 @@ var _Podcasts_serviceDesc = grpc.ServiceDesc{
 func init() { proto.RegisterFile("api.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 218 bytes of a gzipped FileDescriptorProto
+	// 192 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4c, 0x2c, 0xc8, 0xd4,
 	0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x4e, 0x2c, 0xc8, 0x54, 0xf2, 0xe5, 0x62, 0x0f, 0xc8,
 	0x4f, 0x49, 0x4e, 0x2c, 0x2e, 0x11, 0x12, 0xe2, 0x62, 0xc9, 0x4b, 0xcc, 0x4d, 0x95, 0x60, 0x54,
 	0x60, 0xd4, 0xe0, 0x0c, 0x02, 0xb3, 0x85, 0xc4, 0xb8, 0xd8, 0x12, 0x4b, 0x4b, 0x32, 0xf2, 0x8b,
 	0x24, 0x98, 0xc0, 0xa2, 0x50, 0x1e, 0x48, 0x3c, 0x27, 0x35, 0x2f, 0xbd, 0x24, 0x43, 0x82, 0x59,
-	0x81, 0x51, 0x83, 0x35, 0x08, 0xca, 0x53, 0x52, 0xe1, 0xe2, 0x83, 0x1a, 0x17, 0x94, 0x5a, 0x58,
-	0x9a, 0x8a, 0xdd, 0x54, 0x25, 0x4b, 0x2e, 0x7e, 0xb8, 0xaa, 0xe2, 0x82, 0xfc, 0xbc, 0xe2, 0x54,
-	0x21, 0x35, 0x2e, 0xf6, 0x02, 0x88, 0x10, 0x58, 0x25, 0xb7, 0x11, 0x8f, 0x1e, 0xc8, 0xa5, 0x30,
-	0x65, 0x30, 0x49, 0x25, 0x76, 0x2e, 0x56, 0xd7, 0xdc, 0x82, 0x92, 0x4a, 0xa3, 0x19, 0x8c, 0x5c,
-	0x1c, 0x50, 0xd9, 0x62, 0x21, 0x73, 0x2e, 0x2e, 0xf7, 0xd4, 0x12, 0x98, 0x47, 0x84, 0x51, 0xb4,
-	0x42, 0xdc, 0x21, 0x25, 0x82, 0x2a, 0x08, 0xb5, 0x56, 0x93, 0x8b, 0x1b, 0xa1, 0xb1, 0x58, 0x88,
-	0x0b, 0xac, 0x08, 0x6c, 0x81, 0x14, 0x8a, 0x03, 0x0c, 0x18, 0x85, 0x34, 0xb8, 0xb8, 0x1c, 0x53,
-	0x52, 0x60, 0x76, 0xa0, 0xc8, 0xa2, 0xaa, 0x4d, 0x62, 0x03, 0x87, 0xaf, 0x31, 0x20, 0x00, 0x00,
-	0xff, 0xff, 0x56, 0x54, 0x3d, 0x47, 0x6c, 0x01, 0x00, 0x00,
+	0x81, 0x51, 0x83, 0x35, 0x08, 0xca, 0x53, 0x52, 0xe6, 0xe2, 0x75, 0xaa, 0xf4, 0x4b, 0xcc, 0x4d,
+	0x0d, 0x4a, 0x2d, 0x2c, 0x4d, 0xc5, 0x6e, 0xa8, 0x12, 0x3b, 0x17, 0xab, 0x6b, 0x6e, 0x41, 0x49,
+	0xa5, 0x51, 0x03, 0x23, 0x17, 0x07, 0xd4, 0xf6, 0x62, 0x21, 0x5d, 0x2e, 0x4e, 0xf7, 0xd4, 0x12,
+	0x88, 0x6e, 0x21, 0x21, 0x3d, 0x90, 0x3b, 0x51, 0x8c, 0x92, 0xe2, 0x01, 0x8b, 0xc1, 0x5c, 0xab,
+	0xc4, 0xc5, 0xe2, 0x93, 0x59, 0x5c, 0x22, 0xc4, 0x05, 0x16, 0x05, 0x9b, 0x87, 0xaa, 0xc2, 0x80,
+	0x51, 0x48, 0x91, 0x8b, 0xd9, 0x31, 0x25, 0x45, 0x08, 0x45, 0x18, 0x55, 0x51, 0x12, 0x1b, 0x38,
+	0x2c, 0x8c, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0x45, 0x47, 0x36, 0x43, 0x18, 0x01, 0x00, 0x00,
 }

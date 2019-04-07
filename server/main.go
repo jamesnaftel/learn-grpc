@@ -21,14 +21,14 @@ type podcast struct {
 
 type database map[string]podcast
 
-func (s *server) GetPodcast(ctx context.Context, name *pb.PodcastRequest) (*pb.PodcastResponse, error) {
+func (s *server) GetByName(ctx context.Context, name *pb.ByNameRequest) (*pb.Podcast, error) {
 
 	db := initDatabase()
 	p := db[name.GetName()]
-	return &pb.PodcastResponse{Podcast: &pb.Podcast{Name: p.Name, Author: p.Author, Length: p.Length}}, nil
+	return &pb.Podcast{Name: p.Name, Author: p.Author, Length: p.Length}, nil
 }
 
-func (s *server) GetPodcasts(_ *pb.Empty, stream pb.Podcasts_GetPodcastsServer) error {
+func (s *server) List(_ *pb.Empty, stream pb.Podcasts_ListServer) error {
 
 	db := initDatabase()
 
@@ -42,7 +42,7 @@ func (s *server) GetPodcasts(_ *pb.Empty, stream pb.Podcasts_GetPodcastsServer) 
 	return nil
 }
 
-func (s *server) AddPodcast(_ context.Context, p *pb.Podcast) (*pb.Podcast, error) {
+func (s *server) Add(_ context.Context, p *pb.Podcast) (*pb.Podcast, error) {
 	return p, nil
 }
 

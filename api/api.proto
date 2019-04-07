@@ -1,18 +1,12 @@
-
-
-
 syntax = "proto3";
-
-
 
 package api;
 
-
 service Podcasts {
 
-    rpc GetPodcast(PodcastRequest) returns (PodcastResponse);
-    rpc GetPodcasts(Empty) returns (stream Podcast);
-    rpc AddPodcast(Podcast) returns (Podcast);
+    rpc GetByName(ByNameRequest) returns (Podcast);
+    rpc List(Empty) returns (stream Podcast);
+    rpc Add(Podcast) returns (Podcast);
 }
 
 message Podcast {
@@ -21,12 +15,8 @@ message Podcast {
     int32 length = 3;
 }
 
-message PodcastRequest {
+message ByNameRequest {
     string name = 1;
-}
-
-message PodcastResponse {
-    Podcast podcast = 1;
 }
 
 message Empty {

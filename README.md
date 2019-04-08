@@ -13,9 +13,9 @@ docker run --rm -v $(pwd):$(pwd) -w $(pwd) znly/protoc --go_out=plugins=grpc:. -
 
 ## TODO
 * Have the server store data in a db file using proto buf
-* Convert GetPocasts to use a stream
-* Add go modules
 * Add tests
 * Add tls to grpc connections
+* <strike>Convert GetPocasts to use a stream</strike>
+* <strike>Add go modules</strike>
 
 

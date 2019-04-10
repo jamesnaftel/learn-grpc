@@ -12,10 +12,10 @@ go get -u google.golang.org/grpc
 docker run --rm -v $(pwd):$(pwd) -w $(pwd) znly/protoc --go_out=plugins=grpc:. -I. podcasts.proto
 
 ## TODO
-* Have the server store data in a db file using proto buf
 * Add tests
 * Add tls to grpc connections
-* Change error handling
+* <strike>Have the server store data in a db file using proto buf</strike>
+* <strink>Change error handling</strike>
 * <strike>Convert GetPocasts to use a stream</strike>
 * <strike>Add go modules</strike>
 
